@@ -3,6 +3,9 @@ const router = express.Router()
 //middleware
 const Auth = require('./middlewares/Auth')
 
+//validator usa-se como um middleware
+const AuthValidator = require('./validators/AuthValidator')
+
 //controllers
 const AuthController = require('./controllers/AuthController')
 const UserController = require('./controllers/UserController')
@@ -15,9 +18,9 @@ router.get('/ping', (req,res)=> {
 router.get('/states', UserController.getStates)
 
 // processo de login
-router.post('/signin', AuthController.signin)
-// processo de cadastro
-router.post('/signup', AuthController.signup)
+router.post('/user/signin', AuthController.signin)
+// processo de cadastro + middleware validator
+router.post('/user/signup',AuthValidator.signup, AuthController.signup)
 
 // pegando informaçoes do usuario
 router.get('/user/me',Auth.private, UserController.info)
