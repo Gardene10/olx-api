@@ -1,7 +1,6 @@
 // usando expreess-validator lib de verificacao
 const {checkSchema} = require('express-validator')
-const { options } = require('../routes')
-const { signin } = require('../controllers/AuthController')
+
 
 module.exports = {
     //funcao especifica para fazer cadastro

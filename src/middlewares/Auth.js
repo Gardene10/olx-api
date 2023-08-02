@@ -1,15 +1,18 @@
 
+
 //usando o model que contem as informacoes necessarias
 const User = require('../models/User')
+
 module.exports = {
     private: async (req,res,next) =>{
         // se nao existe parametro nem na query nem no body return
         if(!req.query.token && !req.body.token){
-            res.json({notAllowed: true})
+            res.json({notAllowed1: true})
             return
         }
 
         let token = ''
+
         if (req.query.token){
             token = req.query.token
         }
@@ -17,22 +20,19 @@ module.exports = {
             token = req.body.token
         }
         //verifica se foi preenchido os dados
-        if (token = ''){
-            res.json({notAllowed: true})
+        if (token == ''){
+            res.json({notAllowed2: true})
             return
         }
 
         const user = await User.findOne({token})
 
         if(!user){
-            res.json({notAllowed: true})
+            res.json({notAllowed3: true})
             return
         }
         //verifica se e um dado valido
-           
-
         next()
-
     }
-    
+
 }

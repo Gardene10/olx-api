@@ -8,8 +8,6 @@ const modelSchema = new mongoose.Schema({
     state : String,
     passwordHash: String,
     token: String
-
-
 })
 
 const modelName = 'User'

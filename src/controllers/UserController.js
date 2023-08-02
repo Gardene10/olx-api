@@ -1,5 +1,9 @@
-//pegando o model necesssario para usar na funçao
 const State = require('../models/State')
+const User = require('../models/User')
+const Category  = require('../models/Category')
+const Ad = require('../models/Ad')
+
+//pegando o model necesssario para usar na funçao
 
 module.exports = {
     // funcoes do usuario para o controller
@@ -9,6 +13,26 @@ module.exports = {
 
     },
     info: async (req, res) => {
+        let token = req.query.token
+
+        const user = await User.findOne({token})
+        const state = await State.findById(user.state)
+        const ads = await Ad.find({idUser: user._id.toString()})
+
+        let adList = []
+        
+        for(let i in ads){
+            const cat = await Category.findById(ads[i].Category)
+            adList.push({...ads[i],category: cat.slug})
+        }
+
+        res.json({
+            name: user.name,
+            email: user.email,
+            state: state.name,
+            ads: adList
+        })
+
 
     },
     editUser:  async (req, res) => {
