@@ -18,7 +18,7 @@ router.get('/ping', (req,res)=> {
 router.get('/states', UserController.getStates)
 
 // processo de login
-router.post('/user/signin', AuthController.signin)
+router.post('/user/signin', AuthValidator.signin,AuthController.signin)
 // processo de cadastro + middleware validator
 router.post('/user/signup',AuthValidator.signup, AuthController.signup)
 
@@ -45,3 +45,5 @@ router.post('/ad/:id', Auth.private,AdsController.editItem)
 
 
 module.exports = router
+
+//$2b$10$Bqmp0r.dr3lA2SP2ayiT7uNR9d2rFHLH31..tWh7.o8Xdn7x9fDnS tokenYco
