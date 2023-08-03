@@ -10,6 +10,7 @@ const AuthValidator = require('./validators/AuthValidator')
 const AuthController = require('./controllers/AuthController')
 const UserController = require('./controllers/UserController')
 const AdsController = require('./controllers/AdsController')
+const UserValidator = require('./validators/UserValidator')
 //ping test
 router.get('/ping', (req,res)=> {
     res.json({pong: true})
@@ -25,7 +26,7 @@ router.post('/user/signup',AuthValidator.signup, AuthController.signup)
 // pegando informaçoes do usuario
 router.get('/user/me',Auth.private, UserController.info)
 // editando informaçoes do usuario
-router.put('/user/me', Auth.private,UserController.editUser)
+router.put('/user/me',UserValidator.editUser, Auth.private,UserController.editUser)
 
 //listando categorias
 router.get('/categories',AdsController.getCategories)
@@ -40,10 +41,4 @@ router.get('/ad/item', AdsController.getItem)
 router.post('/ad/:id', Auth.private,AdsController.editItem)
 
 
-
-
-
-
 module.exports = router
-
-//$2b$10$Bqmp0r.dr3lA2SP2ayiT7uNR9d2rFHLH31..tWh7.o8Xdn7x9fDnS tokenYco
