@@ -38,7 +38,7 @@ router.get('/ad/list', AdsController.getAds)
 //pegando informacoes de um anuncio especifico
 router.get('/ad/item', AdsController.getItem)
 //alterando informacoes de um anuncio, por fazer envio de imagens sera ultilizado o post ao inves de put
-router.post('/ad/:id', Auth.private,AdsController.editItem)
+router.post('/ad/:id', Auth.private,AdsController.editItem) //pega informacoes na url e no body
 
 
 module.exports = router
