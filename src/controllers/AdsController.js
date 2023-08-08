@@ -101,12 +101,12 @@ module.exports = {
     
       },
     getAds: async (req, res) => {
-        let {sort ='asc', offset = 0, limit = 8, q, cat , state} = req.query
+        let {sort = 'asc', offset = 0, limit = 8, q, cat , state} = req.query
         let filters = {status: true}
         let total = 0
 
         if(q){
-            filters.title = {'$regex': q, '$options': 'i'}
+            filters.title = {'$regex': q, '$options': 'i'} // transforma em case sensitive
         }
         if(cat){
             const c = await Category.findOne({slug: cat}).exec()
@@ -124,7 +124,7 @@ module.exports = {
        total = adsTotal.length
 
        const adsData = await Ad.find(filters)
-            .sort({dateCreated: (sort == 'desc'? -1 : 1)})
+            .sort({dateCreated: (sort == 'desc'?-1:1)})
             .skip(parseInt(offset))
             .limit(parseInt(limit))
             .exec()
