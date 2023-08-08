@@ -36,6 +36,18 @@ module.exports = {
         if(!title || !cat){
           res.json({error: 'Titulo e/ou Categora não foi enviado.'})
         }
+        if(cat.length < 12){
+          res.json({error:'ID de Categoria inesxistente'})
+          return
+        }
+        const category = await Category.findById(cat)
+        if(!category) {
+          res.json({error:'Categoria inesxistente'})
+          return
+
+        }
+
+
         if(price){
           price = price.replace('.', '').replace(',','.').replace('R$ ', '');
           price = parseFloat(price);
@@ -264,11 +276,54 @@ module.exports = {
       if(images){
         updates.images = images
       }
+      
       await Ad.findByIdAndUpdate(id,{$set: updates}) // encontra pelo id e faz um update em todas que estao com o updates
 
-      //todo: novas imagens 
+      if(req.files && req.files.img) {
+        const adI = await Ad.findById(id);
+
+        if(req.files.img.length == undefined) {
+            if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img.mimetype)) {
+                let url = await addImage(req.files.img.data);
+                adI.images.push({
+                    url,
+                    default: false
+                });
+            }
+        } else {
+            for(let i=0; i < req.files.img.length; i++) {
+                if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img[i].mimetype)) {
+                    let url = await addImage(req.files.img[i].data);
+                    adI.images.push({
+                        url,
+                        default: false
+                    });
+                }
+            }
+        }
+
+        adI.images = [...adI.images];
+        await adI.save();
+    }
 
       res.json({error: 'Atualizado!'})
-    }
+    },
+
+    deleteItem: async (req, res) => {
+      const { id } = req.params;
+  
+      try {
+          const deletedAd = await Ad.findByIdAndDelete(id);
+  
+          if (!deletedAd) {
+              res.status(404).json({ error: 'Anúncio não encontrado.' });
+              return;
+          }
+  
+          res.json({ message: 'Anúncio deletado com sucesso.' });
+      } catch (error) {
+          res.status(500).json({ error: 'Ocorreu um erro ao deletar o anúncio.' });
+      }
+  }
 }
 // filter state pffset nao estao ok
