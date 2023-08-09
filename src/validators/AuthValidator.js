@@ -7,7 +7,7 @@ module.exports = {
      //validator cadastro
     signup: checkSchema({
             name: {
-                trim:true,
+                trim:true,//notEmpty
                 isLength:{
                     options: {min: 2}
                 },
@@ -25,7 +25,7 @@ module.exports = {
                 errorMessage: "A senha precisa ter no minimo 4 caracteres"
             },
             state: {
-                notEmpty: true,
+                notEmpty: true, //melhor modelo
                 errorMessage: "Estado não preenchido"
             }
         }),

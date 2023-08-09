@@ -12,8 +12,8 @@ const modelSchema = new mongoose.Schema({
 
 const modelName = 'User'
 
-if(mongoose.connection && mongoose.connection.models[modelName]){
+if(mongoose.connection && mongoose.connection.models[modelName]){ //se o model estiver pronto para conexao ele exporta 
     module.exports = mongoose.connection.models[modelName]
 }else {
-    module.exports = mongoose.model(modelName,modelSchema)
+    module.exports = mongoose.model(modelName,modelSchema) //se nao cria-se e exporta
 }

@@ -9,25 +9,23 @@ const State = require('../models/State')
 //funcao para pegar o buffer da imagem e manipular e salvar
 
 const addImage = async (buffer) => {
-    let newName = `${uuid()}.jpg`;
-    let tmpImg = await jimp.read(buffer);
-    tmpImg.cover(500,500).quality(80).write(`./public/media/${newName}`);
+    let newName = `${uuid()}.jpg`; //add codigo e altera a extensao da imagem
+    let tmpImg = await jimp.read(buffer); // le a imagem
+    tmpImg.cover(500,500).quality(80).write(`./public/media/${newName}`);//formata tamanho e salva
     return newName;
   };
-
 module.exports = {
     // funcoes de Ads para o controller
     getCategories: async (req, res) => {
-        const cats = await Category.find()
+        const cats = await Category.find()// pega todas as categorias
         // listando as acategorias
         let categories = []
         for (let i in cats){
             categories.push({
-                ...cats[i]._doc,
+                ...cats[i]._doc, //._doc pega o intem cru
                 img: `${process.env.BASE}/assents/images/${cats[i].slug}.png`
             })
         }
-
         res.json({categories})
     },
     addAds: async (req, res) => {
@@ -55,11 +53,11 @@ module.exports = {
           price = 0;
         }
        
-        const newAd = new Ad();
+        const newAd = new Ad() ;// Cria uma nova instância do model Ad
         newAd.status = true;
         newAd.idUser = user._id;
         newAd.state = user.state;
-        newAd.dataCreated = new Date();
+        newAd.dataCreated = new Date() // data criada right now
         newAd.title = title;
         newAd.category = cat;
         newAd.price = price;
@@ -68,8 +66,10 @@ module.exports = {
         newAd.views = 0;
     
         if(req.files && req.files.img){
-          if(req.files.img.length == undefined){
+          if(req.files.img.length == undefined){ //verifica se e apenas um objeto
+
             if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img.mimetype)){
+
               let url = await addImage(req.files.img.data);
               newAd.images.push({
                 url,
@@ -77,7 +77,7 @@ module.exports = {
               })
             }
           } else{
-            for(let i = 0; i < req.files.img.length; i++){
+            for(let i = 0; i < req.files.img.length; i++){ //e  um array
               if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img[i].mimetype)){
                 let url = await addImage(req.files.img[i].data);
                 newAd.images.push({
@@ -95,8 +95,8 @@ module.exports = {
         }
     
         const info = await newAd.save();
-        res.json({id: info._id });
-        res.json({newAd});
+        res.json({ id: info._id, newAd });
+
        
     
       },
@@ -106,7 +106,7 @@ module.exports = {
         let total = 0
 
         if(q){
-            filters.title = {'$regex': q, '$options': 'i'} // transforma em case sensitive
+            filters.title = {'$regex': q, '$options': 'i'} // O 'i' torna a busca case-insensitiv
         }
         if(cat){
             const c = await Category.findOne({slug: cat}).exec()
@@ -131,11 +131,11 @@ module.exports = {
         let ads = []
         for(let i in adsData){
             let image 
-            let defaultImg = adsData[i].images.find(e => e.default)
-            if(defaultImg){
-                image = `${process.env.BASE}/media/${defaultImg.url}`
+            let defaultImg = adsData[i].images.find(e => e.default) //funcao js normal p bucar um elemento dentro de um array
+            if(defaultImg){ // verifica se tem a img defaut
+                image = `${process.env.BASE}/media/${defaultImg.url}`// montando a url c a img padrao /array
             }else{
-                image = `${process.env.BASE}/media/default.jpg`
+                image = `${process.env.BASE}/media/default.jpg` // montando a url c a img padrao/obj
             }
             ads.push({
                 id: adsData[i]._id,
@@ -177,19 +177,18 @@ module.exports = {
         let userInfo = await User.findById(ad.idUser).exec()
         let stateInfo = await State.findById(ad.state).exec()
 
-        let others = []
+        let others = [] //pegando outros anuncios do mesmo usuario
         if(other){
-          const otherData = await Ad.find().exec({status: true,idUser: ad.idUser}) //pegando anuncios do mesmo usuario
+          const otherData = await Ad.find().exec({status: true,idUser: ad.idUser}) //verificando se o id do autor do proprio anucio e verificando se ele esta ativo
           for(let i in otherData){
             if(otherData[i]._id.toString() != ad._id.toString()){ //exclui o proprio anuncio ja vizualizado
 
               let image = `${process.env.BASE}/media/default.jpg`
   
-              let defaultImg = otherData[i].images.find(e => e.default)
+              let defaultImg = otherData[i].images.find(e => e.default) //buscando a imagem padrao se ñ achou mantem a anterior
               if(defaultImg) {
-                image = `${process.env.BASE}/media/${defaultImg.url}`
+                image = `${process.env.BASE}/media/${defaultImg.url}`//se encontrou substitui a image pela padrao
               }
-
 
               others.push({
                 id: otherData[i]._id,
@@ -240,7 +239,7 @@ module.exports = {
         res.json({error: 'Anúncio inexistente'})
         return
       }
-      const user = await User.findOne({token}).exec()
+      const user = await User.findOne({token}).exec() //verificando se e o anucio do usuario logado
       if(user._id.toString() !== ad.idUser){
         res.json({error:'Este anuncio não é seu'})
         return
@@ -266,7 +265,7 @@ module.exports = {
         updates.description = desc
       }
       if(cat){
-        const category = await Category.findOne({slug: cat}).exec()
+        const category = await Category.findOne({slug: cat}).exec() //verificano se a categoria existe
         if(!category){
           res.json({error:'Categoria inexistente'})
           return
@@ -312,7 +311,9 @@ module.exports = {
     deleteItem: async (req, res) => {
       const { id } = req.params;
   
+  
       try {
+        
           const deletedAd = await Ad.findByIdAndDelete(id);
   
           if (!deletedAd) {
@@ -326,4 +327,3 @@ module.exports = {
       }
   }
 }
-// filter state pffset nao estao ok

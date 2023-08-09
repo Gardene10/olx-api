@@ -15,12 +15,12 @@ module.exports = {
         res.json({states})
 
     },
-    info: async (req, res) => {
-        let token = req.query.token
+    info: async (req, res) => { //pegando as informacoes do usuario
+        let token = req.query.token // let {token} = req.query
 
         const user = await User.findOne({token})
         const state = await State.findById(user.state)
-        const ads = await Ad.find({idUser: user._id.toString()})
+        const ads = await Ad.find({idUser: user._id.toString()}) //pegando os ads da pessoa que esta logada
 
         let adList = []
 
@@ -43,7 +43,7 @@ module.exports = {
         return
       }
       //validando erros
-      const data = matchedData(req) 
+      const data = matchedData(req) //verifica se os dados da requisicao batem com as regras no validator
 
       let updates = {}
       if(data.name){

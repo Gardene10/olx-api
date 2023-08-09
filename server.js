@@ -1,10 +1,12 @@
 
 // conexao com o DB 
+//carregando  as variaveis de ambiente / bibliotecas
 require('dotenv').config()
 const express = require('express')
 const mongose = require('mongoose')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
+
 //importando o Routes
 const apiRoutes = require('./src/routes')
 

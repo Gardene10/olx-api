@@ -31,12 +31,12 @@ module.exports = {
         return
        }
 
-       const payload = (Date.now()+Math.random()).toString()
-       const token = await bcrypt.hash(payload,10)
+       const payload = (Date.now()+Math.random()).toString() //mls da hora atual e um numero aleatorio 
+       const token = await bcrypt.hash(payload,10) //gerando o token e usando numeros aleatorios
 
        user.token = token
        await user.save()
-       res.json({token, email: data.email})
+       res.json({token, email: data.email}) //retorna o token que foi gerado na criacao do usuario
 
     },
     signup: async (req, res) => {
@@ -58,7 +58,7 @@ module.exports = {
         return
       }
        //verificando se state existe
-      if(mongoose.Types.ObjectId.isValid(data.state)){
+      if(mongoose.Types.ObjectId.isValid(data.state)){ //usando o mongoose para verificar se e um obj ID valido.
         const stateItem = await State.findById(data.state)
       if(!stateItem){
         res.json({
