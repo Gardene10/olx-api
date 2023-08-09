@@ -45,6 +45,10 @@ npm run startdev
 Contribuição 💬
 Contribuições são bem-vindas! Se você encontrar problemas ou tiver melhorias para sugerir, fique à vontade para abrir uma issue ou um pull request.
 
+Developed by Gardene👋
+
+
+
 
 
 
