@@ -1,6 +1,6 @@
 
 
-# OLX API
+# OLX API backend
 
 A OLX API é uma API inspirada na plataforma OLX, que permite aos usuários criar anúncios com imagens, adicionar imagens, se registrar, fazer login e gerenciar anúncios. A API foi desenvolvida utilizando Node.js, Express e outras tecnologias.
 
